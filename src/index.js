@@ -1,1 +1,42 @@
-console.log('Hola Mundo: ')
+import express from 'express'
+import cors from 'cors'
+import morgan from 'morgan'
+import { createServer } from 'http'
+
+import { ApolloServer } from 'apollo-server-express'
+import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core'
+
+import schema from './graphql'
+import config from './config'
+
+async function startApolloServer() {
+   const app = express()
+   app.use(morgan('dev'))
+   app.use(cors())
+   app.use(express.json())
+
+   // const baseURL = '/api/v1'
+
+   app.get('/', (_res, req) => {
+      req.json({ message: 'HOLA DESDE EL SERVIDOR' })
+   })
+
+   const httpServer = createServer(app)
+
+   const server = new ApolloServer({
+      schema,
+      plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+   })
+
+   await server.start()
+
+   server.applyMiddleware({ app })
+
+   httpServer.listen(config.port, () => {
+      console.log(
+         `🚀 Server ready at http://localhost:${config.port}${server.graphqlPath}`
+      )
+   })
+}
+
+startApolloServer()
