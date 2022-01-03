@@ -6,8 +6,9 @@ import { createServer } from 'http'
 import { ApolloServer } from 'apollo-server-express'
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core'
 
-import schema from './graphql'
+import DBConnection from './database/DBConnection'
 import config from './config'
+import schema from './graphql'
 
 async function startApolloServer() {
    const app = express()
@@ -31,6 +32,8 @@ async function startApolloServer() {
    await server.start()
 
    server.applyMiddleware({ app })
+
+   await DBConnection()
 
    httpServer.listen(config.port, () => {
       console.log(
