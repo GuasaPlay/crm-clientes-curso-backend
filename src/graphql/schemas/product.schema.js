@@ -6,10 +6,19 @@ export default gql`
    }
 
    type Mutation {
-      createProduct: ProductMR!
+      createProduct(product: ProductInput!): ProductMR!
+      updateProduct(productId: ID!, product: ProductInput!): ProductMR!
+      deleteProduct(productId: ID!): ProductMR!
    }
 
    type Product {
+      id: ID!
+      name: String!
+      stock: Int
+      price: Float!
+   }
+
+   input ProductInput {
       name: String!
       stock: Int
       price: Float!
