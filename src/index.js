@@ -1,6 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import morgan from 'morgan'
+// import morgan from 'morgan'
 import { createServer } from 'http'
 
 import { ApolloServer } from 'apollo-server-express'
@@ -12,7 +12,7 @@ import schema from './graphql'
 
 async function startApolloServer() {
    const app = express()
-   app.use(morgan('dev'))
+   // app.use(morgan('dev'))
    app.use(cors())
    app.use(express.json())
 

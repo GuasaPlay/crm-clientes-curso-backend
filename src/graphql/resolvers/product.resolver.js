@@ -2,8 +2,14 @@ import Product from '../../models/ProductModel'
 
 export default {
    Query: {
-      async getProducts() {
-         const products = await Product.find().sort({ createdAt: 'desc' })
+      async getProducts(_, args) {
+         const { search = '' } = args
+
+         const regex = new RegExp(search, 'i')
+
+         const products = await Product.find({
+            $or: [{ name: regex }],
+         }).sort({ createdAt: 'desc' })
          return {
             code: '200',
             success: true,

@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose'
 
 const OrderSchema = new Schema(
    {
-      client: {
+      clientId: {
          type: Schema.Types.ObjectId,
          ref: 'Client',
          required: true,
@@ -23,15 +23,19 @@ const OrderSchema = new Schema(
                required: true,
             },
             productPrice: {
-               type: Schema.Types.Decimal128,
+               type: Schema.Types.Number,
                required: true,
             },
          },
       ],
       orderStatus: {
          type: String,
-         required: true,
+         default: 'PENDING',
          enum: ['PENDING', 'CANCELED', 'DELIVERED'],
+      },
+      totalPay: {
+         type: Number,
+         required: true,
       },
    },
    {
@@ -47,5 +51,12 @@ const OrderSchema = new Schema(
       },
    }
 )
+
+OrderSchema.virtual('client', {
+   ref: 'Client',
+   localField: 'clientId',
+   foreignField: '_id',
+   justOne: true,
+})
 
 export default model('Order', OrderSchema, 'Orders')

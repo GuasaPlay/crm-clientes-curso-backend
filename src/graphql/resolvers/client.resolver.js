@@ -2,8 +2,16 @@ import Client from '../../models/ClientModel'
 
 export default {
    Query: {
-      async getClients() {
-         const clients = await Client.find().sort({ createdAt: 'desc' })
+      async getClients(_, args) {
+         const { search = '' } = args
+
+         const regex = new RegExp(search, 'i')
+
+         const clients = await Client.find({
+            $or: [{ name: regex }, { email: regex }],
+         }).sort({
+            createdAt: 'desc',
+         })
          return {
             code: '200',
             success: true,
